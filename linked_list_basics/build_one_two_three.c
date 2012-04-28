@@ -53,7 +53,7 @@ int Length(struct node* head) {
 int main(void) {
     struct node* head = BuildOneTwoThree();
     printf("Length: %d", Length(head));
-    
+
     printf("\nNode values: \n");
     struct node* current = head;
     while (current != NULL) {
@@ -63,4 +63,3 @@ int main(void) {
     printf("\n\n");
     return 0;
 }
-
