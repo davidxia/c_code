@@ -6,30 +6,31 @@
 static char str[] = "STRING TO REVERSE";
 
 
-void reverse(int pos);
-void reverse2(char* buff, int start, int end);
-void rev(char* l, char* r);
-void rev_words(char* str);
+void reverse( int pos );
+void reverse2( char* buff, int start, int end );
+void rev( char* l, char* r );
+void rev_words( char* str );
 
-char* rev_words2(char* strA, char* strB);
+char* rev_words2( char* strA, char* strB );
 
-void remove_whitespace(char* string);
-int str2int(char* string);
-char* esc_percent(char* in, char* out);
-int remove_duplicates(char* str);
+void remove_whitespace( char* string );
+int str2int( char* string );
+char* esc_percent( char* in, char* out );
+int remove_duplicates( char* str );
 
-int main() {
+int main()
+{
     printf("Using first method:\n");
     printf("Original string: [%s]\n", str);
     reverse(0);
     printf("Reversed string: [%s]\n", str);
-    
+
     printf("\nUsing second method:\n");
     char buffer[] = "This is a test";
     printf("Original string: [%s]\n", buffer);
     reverse2(buffer, 0, strlen(buffer)-1);
     printf("Reversed string: [%s]\n", buffer);
-    
+
     printf("\nNow we reverse WORDS in a string.\n");
     char str2[] = "the world will go on forever";
     printf("Original string: [%s]\n", str2);
@@ -39,12 +40,12 @@ int main() {
     printf("\nNow we remove whitespace from: [%s].\n", buffer);
     remove_whitespace(buffer);
     printf("Now we have: [%s].\n", buffer);
-    
+
     char str3[] = "123";
     printf("\nConvert number string into int: [%s].\n", str3);
     int n = str2int(str3);
     printf("%d\n", n);
-    
+
     char input[] = "This is % oh yea";
     printf("\nEscape percents: [%s].\n", input);
     int len = strlen(input);
@@ -60,14 +61,14 @@ int main() {
 // a method to reverse string
 void reverse(int pos) {
     if (pos >= strlen(str)/2) return;
-    
+
     char ch;
-    
+
     // swap str[pos] and str[strlen(str) - pos - 1]
     ch = str[pos];
     str[pos] = str[strlen(str)-pos-1];
     str[strlen(str)-pos-1] = ch;
-    
+
     // now recurse
     reverse(pos+1);
 }
@@ -76,11 +77,11 @@ void reverse(int pos) {
 void reverse2(char* buff, int start, int end) {
     char tmp;
     if (start >= end) return;
-    
+
     tmp = *(buff + start);
     *(buff + start) = *(buff + end);
     *(buff + end) = tmp;
-    
+
     reverse2(buff, ++start, --end);
 }
 
@@ -121,7 +122,7 @@ char* rev_words2(char* strA, char* strB) {
     for (x=strA; *x; x++);
     x--;
     y = x;
-    
+
     for (int i=0; i<strlen(strA); i++) {
         if (*x == ' ') {
             y = x;
@@ -130,7 +131,7 @@ char* rev_words2(char* strA, char* strB) {
             }
         }
     }
-    
+
     return strB;
 }
 
@@ -151,7 +152,7 @@ int str2int(char* string) {
     int num = 0;
     int is_negative = 0;
     int len = strlen(string);
-    
+
     if (string[0] == '-') {
         is_negative = 1;
         i = 1;
@@ -164,7 +165,7 @@ int str2int(char* string) {
     if (is_negative) {
         num *= -1;
     }
-    
+
     return num;
 }
 
@@ -181,7 +182,7 @@ char* esc_percent(char* in, char* out) {
         out++;
     }
     *out = '\0';
-    
+
     return out;
 }
 
@@ -194,31 +195,32 @@ int remove_duplicates(char *str) {
     char filterstr[256]; // new
 
     if(str == NULL)
-     return 0;
+        return 0;
 
     /* check from 1st character in the string */
     while(str[char_check]) {
-  
-      ch = str[char_check];
-  
-      i = j = char_check+1;
 
-      filterstr[0] = str[0]; // added
+        ch = str[char_check];
 
-      /* logic to remove the repeated character */
-      while(str[i]) {
-         if(str[i] != ch) {
-             filterstr[j] = str[i]; //modifid
-             j++; 
-         }
-         i++; 
-      }
-      filterstr[j]='\0'; //modified
+        i = j = char_check+1;
 
-      str = filterstr; //added
+        filterstr[0] = str[0]; // added
 
-      char_check++;
+        /* logic to remove the repeated character */
+        while(str[i]) {
+            if(str[i] != ch) {
+                filterstr[j] = str[i]; //modifid
+                j++;
+            }
+            i++;
+        }
+        filterstr[j]='\0'; //modified
+
+        str = filterstr; //added
+
+        char_check++;
     }
     printf("String after removing duplicates : %s\n",filterstr);
     return 1;
 }
+
