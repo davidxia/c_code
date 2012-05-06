@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+
 /* print histogram of length of words in input */
 main()
 {
