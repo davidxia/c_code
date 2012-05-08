@@ -31,7 +31,7 @@ int main(void)
         printf("%d", arrA[i]);
         printf("%d", arrB[i]);
     }
-    
+
     return 0;
 }
 

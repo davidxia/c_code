@@ -21,7 +21,7 @@ int main(void)
     printf("%s\n ", my_struct.lname);
     my_struct.age = 63;
     show_name(st_ptr);      /* pass the pointer */
-    
+
     return 0;
 }
 

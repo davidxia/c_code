@@ -42,7 +42,7 @@ int main(void)
     my_strcpy2(strC, strA);
     puts(strA);
     puts(strC);
-    
+
     return 0;
 }
 
