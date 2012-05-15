@@ -26,22 +26,24 @@ typedef struct stack {
 
 main()
 {
-    STACK* stack = malloc( sizeof( STACK ) );
-    push( stack, 1 );
-    push( stack, 2 );
-    push( stack, 3 );
-    push( stack, 4 );
-    push( stack, 5 );
+    STACK* stackA = malloc( sizeof( STACK ) );
+    push( stackA, 2 );
+    push( stackA, 99 );
+    push( stackA, 3 );
+    push( stackA, 1 );
+    push( stackA, 4 );
 
-    printf( "stack size: %lu\n", stack->size );
+    STACK* stackB = malloc( sizeof( STACK ) );
 
-    printf( "pop: %d\n", pop( stack ) );
-    printf( "pop: %d\n", pop( stack ) );
-    printf( "pop: %d\n", pop( stack ) );
+    while (!is_empty( stackA )) {
+        int tmp = pop( stackA );
+        while (!is_empty( stackB ) && peek( stackB ) > tmp)
+            push( stackA, pop( stackB ) );
+        push( stackB, tmp );
+    }
 
-    printf( "peek: %d\n", peek( stack ) );
-    printf( "pop: %d\n", pop( stack ) );
-    printf( "is empty? %d\n", is_empty( stack ) );
+    while (!is_empty( stackB ))
+        printf( "pop: %d\n", pop( stackB ) );
 
     printf( "\n" );
 }

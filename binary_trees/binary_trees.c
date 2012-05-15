@@ -1,16 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct aNode
+
+typedef struct aNode
 {
     int data;
     struct aNode* left;
     struct aNode* right;
-};
+    struct aNode* parent;
+} node;
 
-typedef struct aNode node;
+
+node* findMin( node* root );
 
 
+/* A node and reference implementation. */
 node* buildBinarySearchTree()
 {
     node* root = malloc( sizeof( node ) );
@@ -22,30 +26,37 @@ node* buildBinarySearchTree()
     node* leaf4 = malloc( sizeof ( node ) );
 
     root->data = 5;
+    root->parent = NULL;
     root->left = leftNode;
     root->right = rightNode;
 
     leftNode->data = 3;
+    leftNode->parent = root;
     leftNode->left = leaf1;
     leftNode->right = leaf2;
 
     rightNode->data = 9;
+    rightNode->parent = root;
     rightNode->left = leaf3;
     rightNode->right = leaf4;
 
     leaf1->data = 1;
+    leaf1->parent = leftNode;
     leaf1->left = NULL;
     leaf1->right = NULL;
 
     leaf2->data = 4;
+    leaf2->parent = leftNode;
     leaf2->left = NULL;
     leaf2->right = NULL;
 
     leaf3->data = 6;
+    leaf3->parent = rightNode;
     leaf3->left = NULL;
     leaf3->right = NULL;
 
     leaf4->data = 11;
+    leaf4->parent = rightNode;
     leaf4->left = NULL;
     leaf4->right = NULL;
 
@@ -53,16 +64,35 @@ node* buildBinarySearchTree()
 }
 
 
+int countNodes( node* tree )
+{
+    if (!tree->right && !tree->left)
+        return 1;
+
+    int numRightNodes = 0;
+    int numLeftNodes = 0;
+
+    if (tree->right)
+        numRightNodes = countNodes( tree->right );
+    else
+        numRightNodes = 0;
+    if (tree->left)
+        numLeftNodes = countNodes( tree->left );
+    else
+        numLeftNodes = 0;
+
+    return numRightNodes + numLeftNodes + 1;
+}
+
+
 void printTree( node* tree )
 {
-    if (tree->right)
-    {
+    if (tree->right) {
         printf( " " );
         printTree( tree->right );
     }
     printf( "%d\n", tree->data );
-    if (tree->left)
-    {
+    if (tree->left) {
         printf( " " );
         printTree( tree->left );
     }
@@ -71,28 +101,29 @@ void printTree( node* tree )
 /* Given a binary search tree, return true if a node with the target data is found in the tree.
  * Recurs down the tree, chooses the left or right branch by comparing the target to each node.
  */
-int lookup( node* treeNode, int target )
+node* lookup( node* treeNode, int target )
 {
-    if (treeNode)
-    {
-        if (target == treeNode->data) return 1;
-        else
-        {
-            if (target < treeNode->data) return lookup( treeNode->left, target );
-            else return lookup( treeNode->right, target );
+    if (treeNode) {
+        if (target == treeNode->data)
+            return treeNode;
+        else {
+            if (target < treeNode->data)
+                return lookup( treeNode->left, target );
+            else
+                return lookup( treeNode->right, target );
         }
     }
-    else return 0;
+    else
+        return NULL;
 }
 
 
-/* Helper function that allocates a new node with the given data and NULL
- * left and right pointers.
- */
-node* newNode( int data )
+/* Helper function that allocates a new node with the given data and NULL left and right pointers. */
+node* newNode( node* parent, int data )
 {
     node* newNode = malloc( sizeof( node ) );
     newNode->data = data;
+    newNode->parent = parent;
     newNode->left = NULL;
     newNode->right = NULL;
 
@@ -100,35 +131,70 @@ node* newNode( int data )
 }
 
 
-/* Given a binary search tree and a number, inserts a new node witht the given number
+/* Given a binary search tree and a number, inserts a new node with the given number
  * into the correct place in the tree.
  */
-void insert( node** nodeRef, int data )
+void insert( node** nodeRef, node* parent, int data )
 {
     node* current = *nodeRef;
-    if (current)
-    {
-        if (data <= current->data) insert( &(current->left), data );
-        else insert( &(current->right), data );
+    if (current) {
+        if (data <= current->data)
+            insert( &(current->left), current, data );
+        else
+            insert( &(current->right), current, data );
+    } else
+        *nodeRef = newNode( current, data );
+}
+
+
+void replaceNodeInParent( node* item, node* newNode )
+{
+    if (item->parent) {
+        if (item == item->parent->left)
+            item->parent->left = newNode;
+        else
+            item->parent->right = newNode;
     }
-    else *nodeRef = newNode( data );
+
+    if (newNode)
+        newNode->parent = item->parent;
+
+    free( item );
+}
+
+
+
+void delete( node** nodeRef, int data )
+{
+    node* target = lookup( *nodeRef, data );
+
+    if (target) {
+        if (target->left && target->right) {
+            node* successor = findMin( target->right );
+            target->data = successor->data;
+            replaceNodeInParent( successor, successor->right );
+        } else if (target->left) {
+            replaceNodeInParent( target->left, NULL );
+        } else if (target->right) {
+            replaceNodeInParent( target->right, NULL );
+        } else {
+            free( target );
+        }
+    }
 }
 
 
 int size( node* root )
 {
     if (root)
-    {
         return 1 + size( root->left ) + size( root->right );
-    }
     else return 0;
 }
 
 
 int maxDepth( node* root )
 {
-    if (root)
-    {
+    if (root) {
         int ldepth = maxDepth( root->left );
         int rdepth = maxDepth( root->right );
 
@@ -138,15 +204,23 @@ int maxDepth( node* root )
     else return 0;
 }
 
+
 /* Given a non-empty binary search tree, return minimum data value. */
 int minValue( node* root )
 {
     node* current = root;
     while (current->left)
-    {
         current = current->left;
-    }
     return current->data;
+}
+
+
+node* findMin( node* root )
+{
+    node* current = root;
+    while (current->left)
+        current = current->left;
+    return current;
 }
 
 
@@ -155,9 +229,7 @@ int maxValue( node* root )
 {
     node* current = root;
     while (current->right)
-    {
         current = current->right;
-    }
     return current->data;
 }
 
@@ -188,30 +260,39 @@ void printTreePostOrder( node* root )
 int hasPathSum( node* root, int sum )
 {
     if (root == NULL)
-    {
         return (sum == 0);
-    }
-    else
-    {
+    else {
         int subSum = sum - root->data;
         return (hasPathSum( root->left, subSum) || hasPathSum( root->right, subSum ) );
     }
 }
 
 
-int main()
+int* nodesToArray( node* root )
+{
+    int numNodes = countNodes( root );
+    int arr[ numNodes ];
+}
+
+
+main()
 {
     node* root = buildBinarySearchTree();
+    printf( "# nodes in tree: %d\n\n", countNodes( root ) );
     printTree( root );
 
     printf( "\n\nType in a number to search for in the binary search tree:\n" );
     int target;
     scanf( "%d", &target );
-    printf( "\nisFound = %d", lookup( root, target ));
+    if (lookup( root, target ))
+        puts( "Found it!" );
+    else
+        puts( "Could not find it." );
 
     printf( "\n\nType in a number to insert into the binary search tree:\n" );
     scanf( "%d", &target );
-    insert( &root, target );
+    insert( &root, NULL, target );
+    printf( "# nodes in tree: %d\n\n", countNodes( root ) );
     printTree( root );
 
     printf( "\n\nThe size of this tree is: %d", size( root ) );
@@ -227,9 +308,11 @@ int main()
 
     printf( "\n\nIs there a path that sums to (enter sum):\n" );
     scanf( "%d", &target );
-    printf( "%d", hasPathSum( root, target ) );
+    if (hasPathSum( root, target ))
+        printf( "Yes" );
+    else
+        printf( "No" );
 
     printf( "\n\n" );
-    return 0;
 }
 
