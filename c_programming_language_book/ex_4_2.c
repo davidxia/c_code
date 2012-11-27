@@ -3,7 +3,9 @@
 
 #define MAXLINE 100
 
+double atof( char s[] );
 int getLine( char line[], int max );
+int to_power( int base, int exp);
 
 // rudimentary calculator
 main()
@@ -22,8 +24,8 @@ main()
 /* atof: convert string s to double */
 double atof( char s[] )
 {
-    double val, power;
-    int i, sign;
+    double val, power, exp;
+    int i, sign, exp_sign;
 
     // Skip white space
     for (i = 0; isspace( s[ i ] ); i++)
@@ -44,7 +46,24 @@ double atof( char s[] )
         power *= 10;
     }
 
-    return sign * val / power;
+    if (s[ i ] == 'e' || s[ i ] == 'E') {
+        i++;
+    } else {
+        return sign * val / power;
+    }
+
+    exp_sign = (s[ i ] == '-') ? -1 : 1;
+    if (s[ i ] == '+' || s[ i ] == '-')
+        i++;
+
+    for (exp = 0.0; isdigit( s[ i ] ); i++)
+        exp = 10.0 * exp + (s[ i ] - '0');
+
+    if (exp_sign == 1) {
+        return sign * val / power * to_power( 10, exp );
+    } else {
+        return sign * val / power / to_power( 10, exp );
+    }
 }
 
 
@@ -61,5 +80,20 @@ int getLine( char s[], int lim )
     s[ i ] = '\0';
 
     return i;
+}
+
+
+/* to_power: calculate base^exp when both are positive ints */
+int to_power( int base, int exp)
+{
+    int res = 1;
+    int i;
+
+    if (exp < 0)
+        return 0;
+    for (i = 0; i < exp; i++)
+        res *= base;
+
+    return res;
 }
 

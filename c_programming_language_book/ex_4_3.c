@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <math.h>
 
 
 /* Max size of operand or operator */
@@ -58,6 +59,13 @@ main()
                 else
                     printf( "Error: zero divisor\n" );
                 break;
+            case '%':
+                op2 = pop();
+                if (op2 >= 0.0)
+                    push( fmod( pop(), op2 ) );
+                else
+                    printf( "Error: non-positive modulus\n" );
+                break;
             case '\n':
                 printf( "\t%.8g\n", pop() );
                 break;
@@ -96,18 +104,29 @@ double pop( void )
 /* getop: get next character or numeric operand */
 int getop( char s[] )
 {
-    int i, c;
+    int i, c, next;
 
+    // Skip whitespace
     while ( (s[ 0 ] = c = getch()) == ' ' || c == '\t')
         ;
 
     s[ 1 ] = '\0';
-    if (!isdigit( c ) && c != '.') {
+    if (!isdigit( c ) && c != '.' && c != '-') {
         // Not a number
         return c;
     }
 
     i = 0;
+    // Collect sign part
+    if (c == '-') {
+        next = getch();
+        if ( !isdigit( next ) && next != '.' ) {
+            ungetch( next );
+            return c;
+        }
+        s[ ++i ] = c = next;
+    }
+
     // Collect integer part
     if (isdigit( c ))
         while (isdigit( s[ ++i ] = c = getch() ))

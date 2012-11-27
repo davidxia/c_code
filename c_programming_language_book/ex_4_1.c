@@ -3,6 +3,7 @@
 /* Maximum input line length */
 #define MAXLINE 1000
 
+int strLen( char str[] );
 int getLine( char line[], int max );
 int strrindex( char source[], char searchfor[] );
 
@@ -24,7 +25,7 @@ main()
 }
 
 
-int strlen( char s[] )
+int strLen( char s[] )
 {
     int i;
 
@@ -56,8 +57,8 @@ int strrindex( char s[], char t[] )
 {
     int i, j, k;
 
-    for (i = strlen( s ) - 2; i >= 0; i--) {
-        for (j = i, k = strlen( t ) - 1; k >= 0 && s[ j ] == t[ k ]; j--, k--)
+    for (i = strLen( s ) - 2; i >= 0; i--) {
+        for (j = i, k = strLen( t ) - 1; k >= 0 && s[ j ] == t[ k ]; j--, k--)
             ;
         if (k < 0)
             return j + 1;
