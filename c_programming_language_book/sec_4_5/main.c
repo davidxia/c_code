@@ -32,7 +32,7 @@ main()
             case '/':
                 op2 = pop();
                 if (op2 != 0.0)
-                    push( pop() / pop() );
+                    push( pop() / op2 );
                 else
                     printf( "Error: zero divisor\n" );
                 break;
@@ -47,3 +47,4 @@ main()
 
     return 0;
 }
+
