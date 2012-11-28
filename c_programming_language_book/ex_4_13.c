@@ -2,23 +2,23 @@
 #include <string.h>
 
 
-/* reverse: reverse string s in place */
-void reverse( char s[] )
+/* reverse: reverse string s in place using recursion */
+void reverse( char s[], int left, int right )
 {
-    int c, i, j;
+    if (left >= right)
+        return;
 
-    for (i = 0, j = strlen( s ) - 1; i < j; i++, j--) {
-        c = s[ i ];
-        s[ i ] = s[ j ];
-        s[ j ] = c;
-    }
+    int temp = s[ left ];
+    s[ left ] = s[ right ];
+    s[ right ] = temp;
+    reverse( s, ++left, --right);
 }
 
 
 /* itoa: convert n to characters in s */
 void itoa( int n, char s[] )
 {
-    int i, sign;
+    int i, sign, left, right;
 
     // record sign
     if ( (sign = n) < 0 ) {
@@ -39,7 +39,10 @@ void itoa( int n, char s[] )
         s[ i++ ] = '-';
 
     s[ i ] = '\0';
-    reverse( s );
+
+    left = 0;
+    right = strlen( s ) - 1;
+    reverse( s, left, right );
 }
 
 main()
