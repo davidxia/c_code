@@ -29,17 +29,33 @@ main()
 /* getint: get next integer from input into *pn */
 int getint(int *pn)
 {
-    int c, sign;
+    int c, sign, sawsign;
 
-    while (isspace(c = getch())) /* skip white space */
+    // Skip white space
+    while (isspace(c = getch()))
         ;
+
+    // It is not a number
     if (!isdigit(c) && c != EOF && c != '+' && c != '-') {
-        ungetch(c); /* it is not a number */
+        ungetch(c);
         return 0;
     }
+
+    // Get the sign
     sign = (c == '-') ? -1 : 1;
-    if (c == '+' || c == '-')
+
+    // Get the next char
+    if (sawsign = (c == '+' || c == '-'))
         c = getch();
+
+    // If next char is not a digit, put sign char back onto input as well
+    if (!isdigit(c)) {
+        ungetch(c);
+        if (sawsign)
+            ungetch((sign == -1) ? '-' : '+');
+        return 0;
+    }
+
     for (*pn = 0; isdigit(c); c = getch())
         *pn = 10 * *pn + (c - '0');
     *pn *= sign;

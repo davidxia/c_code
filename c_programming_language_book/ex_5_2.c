@@ -5,7 +5,7 @@
 #define BUFSIZE 100
 
 
-int getint(int *pn);
+int getfloat(float *pn);
 int getch(void);
 void ungetch(int);
 
@@ -16,20 +16,21 @@ int bufp = 0;
 
 main()
 {
-    int n;
-    // Get first integer if it exists
-    if (getint(&n) != EOF)
-        printf("%d\n", n);
-    // Get second integer if it exists
-    if (getint(&n) != EOF)
-        printf("%d\n", n);
+    float n;
+    // Get first float if it exists
+    if (getfloat(&n) != EOF)
+        printf("%f\n", n);
+    // Get second float if it exists
+    if (getfloat(&n) != EOF)
+        printf("%f\n", n);
 }
 
 
-/* getint: get next integer from input into *pn */
-int getint(int *pn)
+/* getfloat: get next float from input into *pn */
+int getfloat(float *pn)
 {
     int c, sign;
+    float decimal_place = 1;
 
     while (isspace(c = getch())) /* skip white space */
         ;
@@ -42,7 +43,20 @@ int getint(int *pn)
         c = getch();
     for (*pn = 0; isdigit(c); c = getch())
         *pn = 10 * *pn + (c - '0');
-    *pn *= sign;
+
+    // Handle decimal point, if any
+    if (c == '.') {
+        c = getch();
+    }
+
+    // Collect fractional part of the float
+    while (isdigit(c)) {
+        *pn = 10 * *pn + (c - '0');
+        decimal_place *= 10;
+        c = getch();
+    }
+
+    *pn *= sign / decimal_place;
     if (c != EOF)
         ungetch(c);
     return c;
