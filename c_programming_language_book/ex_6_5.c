@@ -25,6 +25,8 @@ struct nlist *lookup(char *);
 char *strDup(char *);
 // install: put (name, defn) in hashtab
 struct nlist *install(char *, char*);
+// undef: remove a name and definition from table if found
+int undef(char *);
 
 
 unsigned hash(char *s)
@@ -85,5 +87,22 @@ struct nlist *install(char *name, char*defn)
         return NULL;
 
     return np;
+}
+
+
+int undef(char *s)
+{
+    struct nlist *np;
+
+    for (np = hashtab[hash(s)]; np != NULL; np = np->next)
+        if (strcmp(s, np->name) == 0) {
+            // Found
+            free((void *) np->name);
+            free((void *) np->defn);
+            return 1;
+        }
+
+    // Not found
+    return 0;
 }
 
