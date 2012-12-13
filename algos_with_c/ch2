@@ -1,0 +1,53 @@
+1. One of the difficulties with pointers is that often when we misuse them, our
+errors are not caught by the compiler at compile time; they occur at runtime.
+Which of the following result in compile-time errors? Which of the following
+result in runtime errors? Why?
+
+  a. char *sptr = "abc", *tptr;
+     *tptr = sptr;
+
+     compile-time warning: assignment makes int from pointer
+
+  b. char *sptr = "abc", *tptr;
+     tptr = sptr;
+
+     no error
+
+  c. char *sptr = "abc", *tptr;
+     *tptr = *sptr;
+
+     run-time error: no memory allocated for tptr
+
+  d. int *iptr = (int *)10;
+     *iptr = 11;
+
+     run-time error: address not addressable by user
+
+  e. int *iptr = 10;
+     *iptr = 11;
+
+     compile-time warning: assignment makes int from pointer
+
+  f. int *iptr = (int *)10;
+     iptr = NULL;
+
+     no error
+
+
+2. Recall that calculations with pointers are performed using pointer
+arithmetic. If p contains the address 0x10000000, what address does the
+following expression access? How many bytes are accessed at this address?
+
+  *(p + 5)
+
+  Depends on what type p points to.
+
+
+3. The operation list_rem_next removes an element from a linked list (see
+Chapter 5). If iptr is an integer pointer we would like set to an integer
+removed from a list, how might we call list_rem_next as an alternative to the
+approach presented in the chapter? A prototype for the function is shown here,
+where list is the list, element references the element preceding the one to
+remove, and upon return, data references the data removed.
+
+  int list_rem_next(List *list, ListElmt *element, void **data);
