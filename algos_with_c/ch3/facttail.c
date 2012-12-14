@@ -1,8 +1,7 @@
 #include <stdio.h>
 
 
-int facttail(int n, int a)
-{
+int facttail(int n, int a) {
     if (n < 2)
         return a;
     else
@@ -10,8 +9,7 @@ int facttail(int n, int a)
 }
 
 
-int main()
-{
+int main() {
     printf("facttail(5) = %d\n", facttail(5, 1));
     return 0;
 }
