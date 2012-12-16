@@ -140,7 +140,8 @@ int main() {
     dlist_ins_next(list, NULL, data1);
     dlist_ins_prev(list, dlist_head(list), data2);
 
-    for (element = dlist_head(list); element != NULL; element = dlist_next(element)) {
+    for (element = dlist_head(list); element != NULL;
+         element = dlist_next(element)) {
         printf("element->data = %d\n", *((int *) element->data));
     }
 

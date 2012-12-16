@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "list.h"
 
@@ -16,7 +17,8 @@ void list_destroy(List *list) {
     void *data;
 
     while (list_size(list) > 0) {
-        if (list_rem_next(list, NULL, (void **)&data) == 0 && list->destroy != NULL) {
+        if (list_rem_next(list, NULL, (void **)&data) == 0
+            && list->destroy != NULL) {
             /* Call a user-defined function to free dynamically allocated data. */
             list->destroy(data);
         }
@@ -88,4 +90,12 @@ int list_rem_next(List *list, ListElmt *element, void **data) {
     list->size--;
     return 0;
 }
+
+
+/* int main() { */
+    /* List list; */
+    /* list_init(&list, free); */
+
+    /* return 0; */
+/* } */
 
