@@ -1,7 +1,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 #include <stdlib.h>
-#include "list.h"
+#include "../ch5/list.h"
 
 
 /* Implement queues as linked lists */
