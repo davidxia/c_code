@@ -41,16 +41,15 @@ int heap_insert(Heap *heap, const void *data) {
     int ipos, ppos;
 
     /* Allocate storage for node */
-    if ((temp = (void **) realloc(heap->tree, (heap_size(heap) + 1) * sizeof(void *))) == NULL) {
+    if ((temp = (void **) realloc(heap->tree, (heap_size(heap) + 1) * sizeof(void *))) == NULL)
         return -1;
-    }
 
     heap->tree = temp;
 
     /* Insert node after last node */
     heap->tree[heap_size(heap)] = (void *) data;
 
-    /* Heapify tree by pyshing contents of new node upward */
+    /* Heapify tree by pushing contents of new node upward */
     ipos = heap_size(heap);
     ppos = heap_parent(ipos);
     while (ipos > 0 && heap->compare(heap->tree[ppos], heap->tree[ipos]) < 1) {
@@ -107,15 +106,13 @@ int heap_extract(Heap *heap, void **data) {
         lpos = heap_left(ipos);
         rpos = heap_right(ipos);
 
-        if (lpos < heap_size(heap) && heap->compare(heap->tree[lpos], heap->tree[ipos]) > 0) {
+        if (lpos < heap_size(heap) && heap->compare(heap->tree[lpos], heap->tree[ipos]) > 0)
             mpos = lpos;
-        } else {
+        else
             mpos = ipos;
-        }
 
-        if (rpos < heap_size(heap) && heap->compare(heap->tree[rpos], heap->tree[mpos]) > 0) {
+        if (rpos < heap_size(heap) && heap->compare(heap->tree[rpos], heap->tree[mpos]) > 0)
             mpos = rpos;
-        }
 
         /* When mpos is ipos, the heap property has been restored */
         if (mpos == ipos)
