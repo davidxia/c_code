@@ -33,7 +33,7 @@ typedef struct HuffCode_ {
 
 /* Define number of bits for LZ77 phrase tokens */
 #define LZ77_PHRASE_BITS (LZ77_TYPE_BITS + LZ77_WINOFF_BITS\
-                          + LZ77_NEXT_BITS + LZ77_BUFLEN_BITS)
+                          + LZ77_BUFLEN_BITS + LZ77_NEXT_BITS)
 
 /* Define number of bits for LZ77 symbol tokens */
 #define LZ77_SYMBOL_BITS (LZ77_TYPE_BITS + LZ77_NEXT_BITS)
