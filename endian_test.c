@@ -15,8 +15,8 @@ int main() {
     int value;
     value = endian();
     if (value == 1)
-        printf("Machine is little endian\n", value);
+        printf("Your machine is little endian\n", value);
     else
-        printf("machine is big endian\n", value);
+        printf("Your machine is big endian\n", value);
 }
 
